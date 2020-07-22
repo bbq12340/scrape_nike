@@ -2,6 +2,7 @@ try:
     import tkinter as tk
 except ImportError:
     import Tkinter as tk
+from tkinter import messagebox
 from nike_scrape import scrape
 
 root = tk.Tk()
