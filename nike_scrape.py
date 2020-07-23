@@ -5,9 +5,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os, csv
 import urllib.request
 
-os.mkdir("images")
 
 def scrape(keyword, value):
+    os.mkdir("images")
     NIKE = "https://www.nike.com/kr/ko_kr/"
     query = f"search?q={keyword}"
 
@@ -25,9 +25,10 @@ def scrape(keyword, value):
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
     }
 
-
-    i = 1
-    n = 1
+    
+    os.mkdir("images")
+    i = 1 #page_num
+    n = 1 #id
     page_get = f"&page={i}"
 
     while len(ID) < MIN_ITEMS:
@@ -58,6 +59,6 @@ def scrape(keyword, value):
 
     with open('nike.csv', 'w', newline="") as csvfile:
         writer = csv.writer(csvfile)
-        for p in ID:
-            writer.writerow([p,PRODUCTS[p-1], PRICE_TAG[p-1]])
+        for num in ID:
+            writer.writerow([num,PRODUCTS[num-1], PRICE_TAG[num-1]])
     return
