@@ -2,6 +2,7 @@ try:
     import tkinter as tk
 except ImportError:
     import Tkinter as tk
+from tkinter import messagebox
 from nike_scrape import scrape
 
 root = tk.Tk()
@@ -28,9 +29,9 @@ def handle_click():
     value = int(quantity.get())
     try:
         scrape(keyword, value)
-        tk.messagebox.showinfo("info", "process is finished")
+        messagebox.showinfo("info", "process is finished")
     except ValueError:
-        tk.messagebox.showerror("error", "something went wrong")
+        messagebox.showerror("error", "something went wrong")
 
 
 btn = tk.Button(root, text="search", command=handle_click)

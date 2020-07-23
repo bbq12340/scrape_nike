@@ -5,7 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os, csv
 import urllib.request
 
-#os.mkdir("images")
+os.mkdir("images")
 
 def scrape(keyword, value):
     NIKE = "https://www.nike.com/kr/ko_kr/"
@@ -16,6 +16,10 @@ def scrape(keyword, value):
     ID = []
     PRODUCTS = []
     PRICE_TAG = []
+    INVALID_URL = {
+        "id":[],
+        "url":[]
+    }
 
     user_agent = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
@@ -32,19 +36,25 @@ def scrape(keyword, value):
         soup = BeautifulSoup(r.text, "html.parser")
         item_list = soup.find_all("div", {"class": "a-product"})
         for item in item_list:
-            image = item.find("div", {"class": "a-product-image-primary"}).find("img").get("src").strip("?browse")
+            image = item.find("div", {"class": "a-product-image-primary"}).find("img").get("src").strip("?browse").strip("")
             title = item.find("p", {"class": "product-display-name"}).text
             price = item.find("p", {"class": "product-display-price"}).text
             ID.append(n)
             PRODUCTS.append(title)
             PRICE_TAG.append(price)
-            #urllib.request.urlretrieve(image, f"images/{n}.jpg")
+            try:
+                urllib.request.urlretrieve(image, f"images/{n}.jpg")
+            except Exception:
+                INVALID_URL['id'].append(n)
+                INVALID_URL['url'].append(image)
             n=n+1
         i = i + 1
         if len(ID) >= MIN_ITEMS:
             break
 
-
+    with open('invalid_url.txt', 'w') as file:
+        for t in range(0,len(INVALID_URL['id'])):
+            file.write(f"{INVALID_URL['id'][t]}.jpg: {INVALID_URL['url']}\n")
 
     with open('nike.csv', 'w', newline="") as csvfile:
         writer = csv.writer(csvfile)
